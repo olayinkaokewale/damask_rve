@@ -18,12 +18,12 @@ def createRVE(start:int, grains:int, path:str='rves/'):
     # Create the first RVE with grain
     seeds = damask.seeds.from_random(size, N_grains, cells)
     grid = damask.Grid.from_Voronoi_tessellation(cells,size,seeds)
-    grid.save(f'{path}Polycystal_{N_grains}_{cells[0]}x{cells[1]}x{cells[2]}')
+    grid.save(f'{path}Polycrystal_{N_grains}_{cells[0]}x{cells[1]}x{cells[2]}')
 
     # Rescale the previously created grid
     for x in range(start-1,3,-1):
         new_cells = [pow(2,x), pow(2,x), pow(2,x)]
-        output_file = f'{path}Polycystal_{N_grains}_{new_cells[0]}x{new_cells[1]}x{new_cells[2]}'
+        output_file = f'{path}Polycrystal_{N_grains}_{new_cells[0]}x{new_cells[1]}x{new_cells[2]}'
         scaled = grid.scale(new_cells)
         scaled.save(output_file)
 
