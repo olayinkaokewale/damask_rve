@@ -18,6 +18,7 @@ def createRVE(start:int, grains:int, path:str='rves/'):
     # Create the first RVE with grain
     seeds = damask.seeds.from_random(size, N_grains, cells)
     grid = damask.Grid.from_Voronoi_tessellation(cells,size,seeds)
+    grid.material = grid.material + 1
     grid.save(f'{path}Polycrystal_{N_grains}_{cells[0]}x{cells[1]}x{cells[2]}')
 
     # Rescale the previously created grid
@@ -32,4 +33,4 @@ def createRVE(start:int, grains:int, path:str='rves/'):
 for y in range(20,200,20):
     path = f'rves/{y}_grains/'
     createDirectory(path)
-    createRVE(7,y,path)
+    createRVE(5,y,path)

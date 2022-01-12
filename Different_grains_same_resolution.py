@@ -1,3 +1,5 @@
+import sys
+sys.path.append('/nethome/storage/raid2/o.okewale/damask/python')
 import numpy as np
 from damask import Grid
 from damask import seeds
