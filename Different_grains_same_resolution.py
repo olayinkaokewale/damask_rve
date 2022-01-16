@@ -35,4 +35,5 @@ print("Size =>", size)
 # creating the actual geometry
 seeds = seeds.from_random(size,number_of_grains,cells)
 grid  = Grid.from_Voronoi_tessellation(cells,size,seeds,periodic=True)    #always make periodic
+grid.material = grid.material + 1
 grid.save(f'rves/Polycrystal_{number_of_grains}_{cells[0]}x{cells[1]}x{cells[2]}')
