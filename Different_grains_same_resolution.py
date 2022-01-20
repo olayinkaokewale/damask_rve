@@ -20,7 +20,7 @@ print ("Cells per grain =>", cells_per_grain_int)
 
 # cells for the geometry
 
-number_of_grains = 60
+number_of_grains = 80
 
 total_cells_needed = number_of_grains*cells_per_grain_int
 
