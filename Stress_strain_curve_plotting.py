@@ -36,7 +36,9 @@ def plotResults(simulation_sample_name:str):
         strain_list.append(np.average(f[path]))
 
     plt.figure()
-    plt.plot(strain_list, stress_list)
+    plt.plot(strain_list, stress_list, linestyle="-.")
+    plt.ylabel('$\sigma$ (MPa)')
+    plt.xlabel('$\epsilon$')
     plt.savefig(f'plots/{simulation_sample_name}_stress_strain_plot.png', bbox_inches='tight')
 
 # 0. Set the dictionary mapping 'grain numbers' to 'cells'
@@ -51,6 +53,5 @@ createDirectory('plots')
 
 # 2. Run through the simulations
 for grain_number in dicts.keys():
-    # print(key, dicts.get(key))
     cell = dicts.get(grain_number)
     plotResults(f'Polycrystal_{grain_number}_{cell}x{cell}x{cell}')

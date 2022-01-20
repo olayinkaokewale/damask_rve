@@ -14,7 +14,7 @@ Note:
     1. decrease/increase the grid spacing (dx) and keep the grain volume constant thereby increasing/decreasing the number of cells per grain
 """
 
-dx = 5E-06    # grid spacing
+dx = 3E-06    # grid spacing
 
 d = 32E-06    # diameter of the grain
 
@@ -52,7 +52,7 @@ def generateRVE(start=20,end=60,increment=20, iteration_count=0, initial_volume=
         genrated_seeds = seeds.from_random(size,number_of_grains,cells)
         grid  = Grid.from_Voronoi_tessellation(cells,size,genrated_seeds,periodic=True)    #always make periodic
         grid.material = grid.material + 1
-        grid.save(f'rves/test/Polycrystal_{number_of_grains}_{cells[0]}x{cells[1]}x{cells[2]}')
+        grid.save(f'rves/mid_hd/Polycrystal_{number_of_grains}_{cells[0]}x{cells[1]}x{cells[2]}')
 
         generateRVE(start, end, increment, iteration_count+1,initial_volume)
 
