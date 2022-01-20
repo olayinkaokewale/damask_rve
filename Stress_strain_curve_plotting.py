@@ -14,25 +14,26 @@ simulation_base_path = '/nethome/o.okewale/examples/sim_results'
 fname_suffix = 'tensionX'
 
 # 0. Set the dictionary mapping 'grain numbers' to 'cells'
-dicts = {
-    '20': '18',
-    '40': '22',
-    '60': '25'
-}
+simulations = [
+    [20,14],
+    [20,18],
+    [20,24]
+]
 
 markers = [".","o","*","v","p",">","d","+","x","s"]
 
 def plotResults():
     plt_datas = []
 
-    for index,grain_number in enumerate(dicts.keys()):
-        cell = dicts.get(grain_number)
-        file_name = f'Polycrystal_{grain_number}_{cell}x{cell}x{cell}'
+    for index,simulation in enumerate(simulations):
+        grains = simulation[0]
+        cell = simulation[1]
+        file_name = f'Polycrystal_{grains}_{cell}x{cell}x{cell}'
         plt_data = {
             'stress': [],
             'strain': [],
             'incs': [],
-            'label': f'{grain_number} - [{cell},{cell},{cell}]',
+            'label': f'{grains} - [{cell},{cell},{cell}]',
             'markers': markers[index]
         }
 
@@ -63,12 +64,13 @@ def plotResults():
     plt.xlabel('$\epsilon$')
     plt.legend(loc='lower right')
     plt.title("stress-strain plot")
-    plt.savefig(f'plots/stress_strain_plot.png', bbox_inches='tight')
+    plt.savefig(f'{output_folder}/stress_strain_plot.png', bbox_inches='tight')
 
 
 
 # 1. Create the plot directory if it doesn't exist
-createDirectory('plots')
+output_folder = 'plots/20s'
+createDirectory(output_folder)
 
 # 2. Run through the simulations
 plotResults()

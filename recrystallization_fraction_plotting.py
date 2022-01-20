@@ -10,26 +10,27 @@ def createDirectory(dir:str):
 
 simulation_base_path = '/nethome/o.okewale/examples/sim_results'
 
-# 0. Set the dictionary mapping 'grain numbers' to 'cells'
-dicts = {
-    '20': '18',
-    '40': '22',
-    '60': '25'
-}
+# 0. Set the array mapping 'grain numbers' to 'cells'
+simulations = [
+    [20,14],
+    [20,18],
+    [20,24]
+]
 
 markers = [".","o","*","v","p",">","d","+","x","s"]
 
 def plotResults():
     plt_datas = []
 
-    for index,grain_number in enumerate(dicts.keys()):
-        cell = dicts.get(grain_number)
-        filename = f'Polycrystal_{grain_number}_{cell}x{cell}x{cell}'
-        input_file = f'{simulation_base_path}/{filename}/2000_stand/CA_files/2.0/.fractions.txt'
+    for index,simulation in enumerate(simulations):
+        grains = simulation[0]
+        cell = simulation[1]
+        filename = f'Polycrystal_{grains}_{cell}x{cell}x{cell}'
+        input_file = f'{simulation_base_path}/{filename}/2000_stand/CA_files/5.0/.fractions.txt'
         plt_data = {
             'time': [],
             'fraction': [],
-            'label': f'{grain_number} - [{cell},{cell},{cell}]',
+            'label': f'{grains} - [{cell},{cell},{cell}]',
             'markers': markers[index]
         }
         with open(input_file) as f:
@@ -51,7 +52,7 @@ def plotResults():
 
 
 # 1. Create the plot directory if it doesn't exist
-output_folder = 'plots'
+output_folder = 'plots/20s'
 createDirectory(output_folder)
 
 # 2. Run through the simulations
