@@ -9,20 +9,27 @@ def createDirectory(dir:str):
         os.makedirs(dir)
 
 simulation_base_path = '/nethome/o.okewale/examples/sim_results'
-# times_for_CA   = np.arange(0.25,2.25,0.25)
-times_for_CA   = [2.0]
+
+# 0. Set the dictionary mapping 'grain numbers' to 'cells'
+dicts = {
+    '20': '18',
+    '40': '22',
+    '60': '25'
+}
+
 markers = [".","o","*","v","p",">","d","+","x","s"]
 
-def plotResults(simulation_sample_name:str):
+def plotResults():
     plt_datas = []
 
-    # time = '0.75'
-    for index, time in enumerate(times_for_CA):
-        input_file = f'{simulation_base_path}/{simulation_sample_name}/2000_stand/CA_files/{time}/.fractions.txt'
+    for index,grain_number in enumerate(dicts.keys()):
+        cell = dicts.get(grain_number)
+        filename = f'Polycrystal_{grain_number}_{cell}x{cell}x{cell}'
+        input_file = f'{simulation_base_path}/{filename}/2000_stand/CA_files/2.0/.fractions.txt'
         plt_data = {
             'time': [],
             'fraction': [],
-            'label': time,
+            'label': f'{grain_number} - [{cell},{cell},{cell}]',
             'markers': markers[index]
         }
         with open(input_file) as f:
@@ -35,25 +42,17 @@ def plotResults(simulation_sample_name:str):
 
     plt.figure()
     for data in plt_datas:
-        plt.plot(data['time'], data['fraction'], linestyle='-', color='red', label=data['label'], marker=data['markers'])
+        plt.plot(data['time'], data['fraction'], linestyle='-', label=data['label'], marker=data['markers'])
     plt.xlabel('$t$ (s)')
     plt.ylabel('$X$')
-    # plt.legend()
-    plt.savefig(f'{output_folder}/{simulation_sample_name}_rx_fractions_plot.png', bbox_inches='tight')
+    plt.legend(loc='lower right')
+    plt.title("RX fraction - time plot")
+    plt.savefig(f'{output_folder}/rx_fractions_plot.png', bbox_inches='tight')
 
-# 0. Set the dictionary mapping 'grain numbers' to 'cells'
-dicts = {
-    '20': '18',
-    '40': '22',
-    '60': '25'
-}
 
 # 1. Create the plot directory if it doesn't exist
-output_folder = 'plots/fractions'
+output_folder = 'plots'
 createDirectory(output_folder)
 
 # 2. Run through the simulations
-# plotResults('Polycrystal_20_18x18x18')
-for grain_number in dicts.keys():
-    cell = dicts.get(grain_number)
-    plotResults(f'Polycrystal_{grain_number}_{cell}x{cell}x{cell}')
+plotResults()
