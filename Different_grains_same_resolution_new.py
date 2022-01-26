@@ -20,7 +20,7 @@ Note:
     1. decrease/increase the grid spacing (dx) and keep the grain volume constant thereby increasing/decreasing the number of cells per grain
 """
 
-dx = 4E-06    # grid spacing
+dx = 8E-06    # grid spacing
 
 d = 32E-06    # diameter of the grain
 
