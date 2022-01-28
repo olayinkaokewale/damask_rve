@@ -12,7 +12,7 @@ def createDirectory(dir:str):
 
 
 
-# 0. Set the dictionary mapping 'grain numbers' to 'cells'
+# 0. Set the array mapping 'grain numbers' to 'cells'
 all_simulations = [
 [
     [20,14,5],
@@ -61,14 +61,78 @@ all_simulations = [
 ]
 ]
 
+def checkSameSimulations(simulations):
+    prev_number = 0
+    for simu in simulations:
+        if prev_number == 0:
+            prev_number = simu[0]
+        else:
+            if (prev_number != simu[0]):
+                return False
+    return True
 
-def plotResults(simulations):
+# print(checkSameSimulations(all_simulations[6]))
+
+def plotRXTimeResults(simulations):
+    simulation_base_path = '/nethome/o.okewale/examples/sim_results'
+    markers = [".","o","*","v","p",">","d","+","x","s"]
+    label_prefix = ""
+    is_same_grains = False
+    if (checkSameSimulations(simulations)):
+        label_prefix = f'{simulations[0][0]} grains: '
+        is_same_grains = True
+    else:
+        label_prefix = f'{simulations[0][2]} $\mu$m grid spacing: '
+
+    plt_datas = []
+
+    out_file_name_prefix = ''
+    for index,simulation in enumerate(simulations):
+        grains = simulation[0]
+        cell = simulation[1]
+        dx_spacing = simulation[2]
+
+        out_file_name_prefix = f'{out_file_name_prefix}{grains}-{cell}_'
+
+        filename = f'Polycrystal_{grains}_{cell}x{cell}x{cell}'
+        input_file = f'{simulation_base_path}/{filename}/2000_stand/CA_files/5.0/.fractions.txt'
+
+        if not is_same_grains:
+            legend_label = f'{grains} grains - [{cell}x{cell}x{cell}]'
+        else:
+            legend_label = f'{dx_spacing} $\mu$m'
+
+        plt_data = {
+            'time': [],
+            'fraction': [],
+            'label': legend_label,
+            'markers': markers[index]
+        }
+        with open(input_file) as f:
+            lines = f.readlines()
+            plt_data['time'] = [round(float(line.split()[0]),2) for line in lines]
+            plt_data['fraction'] = [round(float(line.split()[1]),2) for line in lines]
+        plt_datas.append(plt_data)
+        # print(plt_data)
+        
+
+    plt.figure()
+    for data in plt_datas:
+        plt.plot(data['time'], data['fraction'], linestyle='-', label=data['label'], marker=data['markers'])
+    plt.xlabel('$t$ (s)')
+    plt.ylabel('$X$')
+    plt.legend(loc='lower right')
+    plt.title(f"{label_prefix}RX fraction - time plot")
+    plt.savefig(f'{output_folder}/{out_file_name_prefix}rx_fractions_plot.png', bbox_inches='tight')
+
+
+def plotStressStrainResults(simulations):
     simulation_base_path = '/nethome/o.okewale/examples/sim_results'
     fname_suffix = 'tensionX'
     markers = [".","o","*","v","p",">","d","+","x","s"]
     label_prefix = ""
     is_same_grains = False
-    if (simulations[0][0] == simulations[1][0]):
+    if (checkSameSimulations(simulations)):
         label_prefix = f'{simulations[0][0]} grains: '
         is_same_grains = True
     else:
@@ -130,15 +194,17 @@ def plotResults(simulations):
     plt.savefig(f'{output_folder}/{out_file_name_prefix}stress_strain_plot.png', bbox_inches='tight')
 
 
-
 # 1. Create the plot directory if it doesn't exist
 output_folder = 'plots'
 createDirectory(output_folder)
 
-# 2. Run through all the simulations
+# # 2. Run through the simulations
 # for simul in all_simulations:
-#     plotResults(simul)
+#     plotRXTimeResults(simul)
+#     plotStressStrainResults(simul)
 
-#2b. Run just one
-plotResults(all_simulations[len(all_simulations)-1])
-# plotResults(all_simulations[0])
+# # 2b. Run just one
+# plotRXTimeResults(all_simulations[len(all_simulations)-1])
+# plotStressStrainResults(all_simulations[len(all_simulations)-1])
+plotRXTimeResults(all_simulations[3])
+plotStressStrainResults(all_simulations[3])

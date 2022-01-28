@@ -27,8 +27,11 @@ def extract_ori(simulation):
 all_simulations = [
     [10,14,4],
     [98,30,4],
-    [955,64,4]
+    [98,15,8],
+    [955,64,4],
+    [955,32,8]
 ]
 
-for simu in all_simulations:
-    extract_ori(simu)
+# for simu in all_simulations:
+#     extract_ori(simu)
+extract_ori([955,32,8])
