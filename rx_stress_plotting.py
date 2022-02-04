@@ -58,6 +58,18 @@ all_simulations = [
 [
     [955,32,8],
     [955,64,4]
+],
+[
+    [955,32,8,4900],
+    [512,26,8,5100],
+    [98,15,8,6000],
+    [10,7,8,5900]
+],
+[
+    [10,7,8,6000],
+    [98,15,8,6000],
+    [512,26,8,6000],
+    [955,32,8,6000]
 ]
 ]
 
@@ -91,11 +103,12 @@ def plotRXTimeResults(simulations):
         grains = simulation[0]
         cell = simulation[1]
         dx_spacing = simulation[2]
+        stand_number = 2000 if len(simulation) < 4 else simulation[3]
 
         out_file_name_prefix = f'{out_file_name_prefix}{grains}-{cell}_'
 
         filename = f'Polycrystal_{grains}_{cell}x{cell}x{cell}'
-        input_file = f'{simulation_base_path}/{filename}/2000_stand/CA_files/5.0/.fractions.txt'
+        input_file = f'{simulation_base_path}/{filename}/{stand_number}_stand/CA_files/5.0/.fractions.txt'
 
         if not is_same_grains:
             legend_label = f'{grains} grains - [{cell}x{cell}x{cell}]'
@@ -174,7 +187,7 @@ def plotStressStrainResults(simulations):
                     
         for path in d.get_dataset_location('sigma_vM'):
             # plt_data['incs'].append(path.split('/')[0])
-            plt_data['stress'].append(np.average(f[path]))
+            plt_data['stress'].append(np.average(f[path])/1e6)
         for path in d.get_dataset_location('epsilon_V^0.0(F)_vM'):
             plt_data['strain'].append(np.average(f[path]))
         
@@ -204,7 +217,7 @@ createDirectory(output_folder)
 #     plotStressStrainResults(simul)
 
 # # 2b. Run just one
-# plotRXTimeResults(all_simulations[len(all_simulations)-1])
-# plotStressStrainResults(all_simulations[len(all_simulations)-1])
-plotRXTimeResults(all_simulations[3])
-plotStressStrainResults(all_simulations[3])
+plotRXTimeResults(all_simulations[len(all_simulations)-1])
+plotStressStrainResults(all_simulations[len(all_simulations)-1])
+# plotRXTimeResults(all_simulations[3])
+# plotStressStrainResults(all_simulations[3])

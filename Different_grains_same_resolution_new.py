@@ -20,7 +20,7 @@ Note:
     1. decrease/increase the grid spacing (dx) and keep the grain volume constant thereby increasing/decreasing the number of cells per grain
 """
 
-dx = 2E-06    # grid spacing
+dx = 8E-06    # grid spacing
 
 d = 32E-06    # diameter of the grain
 
@@ -104,4 +104,5 @@ def generateRVE(start=20,end=60,increment=20, iteration_count=0, initial_volume=
 
 # generateRVE(20,60,20) # generate the RVEs for the grain number passed
 
-generateRVEForValues([10,100,1000], recalculate_grain=True)
+# generateRVEForValues([10,100,310,510,1000], recalculate_grain=True)
+generateRVEForValues([10,2200], recalculate_grain=True)

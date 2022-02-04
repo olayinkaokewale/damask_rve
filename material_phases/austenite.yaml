@@ -1,32 +1,37 @@
-lattice: cF
-rho: 7874
-mechanics:
-  output: [F, P, F_e, F_p, L_p, O]
-  elasticity: {C_11: 190.0e9, C_12: 140.0e9, C_44: 80.0e9, type: hooke}
-  plasticity:
-    B: [0.01]
-    D: 2.0e-05
-    D_0: 4.0e-05
-    D_a: 7.909942905957548
-    Gamma_sf_0K: -0.0396
-    dGamma_sf_dT: 0.0002
-    N_sl: [12]
-    N_tr: [0]
-    N_tw: [0]
-    Q_cl: 4.730637960648597e-19
-    omega: 1000.0
-    Q_s: [3.0e-19]
-    b_sl: [2.56e-10]
-    f_at: 1.0
-    h_sl_sl: [0.122, 0.122, 0.625, 0.07, 0.137, 0.122]
-    i_sl: [24.880110660832806]
-    output: [rho_mob, rho_dip]
-    p_sl: [0.32]
-    q_sl: [1.46]
-    rho_dip_0: [100000000000.0]
-    rho_mob_0: [100000000000.0]
-    tau_0: [1.5e8]
-    type: dislotwin
-    v_0: [1.0e5]
-    v_sb: 0.0
-thermal: {c_p: 1, K_11: 0, K_22: 0, K_33: 0}
+Austenite:
+  lattice: cF
+  rho: 7874
+  mechanics:
+    output: [F, P, F_e, F_p, L_p, O]
+    elasticity: {C_11: 50.0e9, C_12: 32.0e9, C_44: 47.0e9, type: hooke}
+    plasticity:
+      B: [0.01]
+      D: 2.0e-05
+      D_0: 4.0e-05
+      D_a: 8.0
+      Gamma_sf_0K: -0.0396
+      dGamma_sf_dT: 0.0002
+      N_sl: [12]
+      N_tr: [0]
+      N_tw: [0]
+      Q_cl: 4.0e-19
+      omega: 950.0
+      Q_s: [4.5e-19]
+      b_sl: [2.56e-10]
+      f_at: 1.0
+      h_sl_sl: [0.122, 0.122, 0.625, 0.07, 0.137, 0.122]
+      i_sl: [20.0]
+      output: [rho_mob, rho_dip]
+      p_sl: [0.32]
+      q_sl: [1.46]
+      rho_dip_0: [500000000000.0]
+      rho_mob_0: [500000000000.0]
+      tau_0: [1.5e8]
+      type: dislotwin
+      v_0: [1.0e5]
+      v_sb: 0.0
+  thermal:
+    c_p: 1
+    K_11: 0
+    K_22: 0
+    K_33: 0
