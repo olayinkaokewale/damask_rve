@@ -1,0 +1,26 @@
+inc0 (0.0s)
+  phase
+    Austenite
+      mechanics
+        F / 1: deformation gradient
+        F_e / 1: elastic deformation gradient
+        F_p / 1: plastic deformation gradient
+        IPFcolor_[0 0 1] / 8-bit RGB: Inverse Pole Figure (IPF) colors along sample direction [0 0 1]
+        L_p / 1/s: plastic velocity gradient
+        O / q_0 (q_1 q_2 q_3): crystal orientation as quaternion
+        P / Pa: First Piola-Kirchhoff stress
+        epsilon_V^0.0(F) / 1: Strain tensor of F (deformation gradient)
+        epsilon_V^0.0(F)_vM / 1: Mises equivalent strain of epsilon_V^0.0(F) (Strain tensor of F (deformation gradient))
+        reorientation / degrees: Reorientation{" axis and" if with_axis else ""} angle
+        sigma / Pa: Cauchy stress calculated from P (First Piola-Kirchhoff stress) and F (deformation gradient)
+        sigma_vM / Pa: Mises equivalent stress of sigma (Cauchy stress calculated from P (First Piola-Kirchhoff stress) and F (deformation gradient))
+      plastic
+        r_s / n/a: None (formula: 30/np.sqrt(#tot_density#))
+        rho_dip / 1/m²: dislocation dipole density
+        rho_mob / 1/m²: mobile dislocation density
+        tot_density / n/a: None (formula: np.sum((np.sum(#rho_mob#,1),np.sum(#rho_dip#,1)),0))
+  homogenization
+    direct
+      mech
+      thermal
+      damage

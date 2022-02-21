@@ -15,28 +15,30 @@ def extract_ori(simulation):
     output_base = f'{simulation_base_path}/{filename}/{stand}_stand/CA_files/0.0'
     createDirectory(output_base)
     output_file = f'{output_base}/..ang'
+    rho_output_file = f'{output_base}/._rho.txt'
 
     orientations = []
+    rho = []
     with open(input_file) as f:
         next(f)
         lines = f.readlines()
         orientations = [f'{line.split()[7]} {line.split()[8]} {line.split()[9]}' for line in lines]
+        rho = [f'{line.split()[5]}' for line in lines]
 
     with open(output_file,'w') as fx:
         fx.writelines('\n'.join(orientations))
+    
+    with open(rho_output_file,'w') as rfx:
+        rfx.writelines('\n'.join(rho))
 
 all_simulations = [
     [10,7,8,6000],
-    [10,14,4,2000],
-    [98,60,2,2000],
-    [98,30,4,2000],
     [98,15,8,6000],
-    [955,64,4,2000],
     [955,32,8,6000],
-    [2160,42,8,2000],
+    [2160,42,8,6000],
     [512,26,8,6000]
 ]
 
 # for simu in all_simulations:
 #     extract_ori(simu)
-extract_ori([955,32,8,6000])
+extract_ori([2160,42,8,6000])
