@@ -39,7 +39,8 @@ def plotData(input_path, output_path, graph_title=""):
 output_folder = './plots/texture_index'
 createDirectory(output_folder)
 suffix = 'texture_index_entropy'
-input_files = ['4micron_0.0','4micron_5.0','8micron_0.0','8micron_5.0']
+# input_files = ['4micron_0.0','4micron_5.0','8micron_0.0','8micron_5.0']
+input_files = ['8micron_2160_diff_0.0', '8micron_2160_diff_5.0']
 
 for x in input_files:
     plotData(f'data/{x}_{suffix}.data', f'{output_folder}/{x}_{suffix}_plot.png', f'{x} TI & Entropy plot')
