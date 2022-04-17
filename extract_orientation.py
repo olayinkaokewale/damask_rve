@@ -41,12 +41,13 @@ all_simulations = [
 all_simulations_2 = [
     [10,14,4,6000],
     [98,30,4,6000],
+    [310,44,4,6000]
 ]
 
 simulation_base_path = f'/nethome/o.okewale/examples/4e-06_3.2e-05/sim_results_1'
 # for simu in all_simulations_2:
 #     extract_ori(simu, simulation_base_path)
-extract_ori([310,44,4,6000], simulation_base_path)
+extract_ori([512,52,4,6000], simulation_base_path)
 # for i in range(1,4):
 #     simulation_base_path = f'/nethome/o.okewale/examples/4e-06_3.2e-05/sim_results_{i}'
 #     extract_ori([955,32,8,6000], simulation_base_path)

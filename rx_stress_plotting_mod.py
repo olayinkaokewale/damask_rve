@@ -84,16 +84,8 @@ all_simulations = [
     [310,22,8,6000],
 ],
 [
-    [10,7,8,3000]
-],
-[
-    [10,7,8,6000],
-    [98,15,8,6000],
-    [310,22,8,6000],
-    [512,26,8,6000],
-    [955,32,8,6000],
-    [2160,42,8,6000]
-],
+    [10,7,8,6000]
+]
 ]
 
 def checkSameSimulations(simulations):
@@ -129,7 +121,7 @@ def plotRXTimeResults(simulations):
 
         out_file_name_prefix = f'{out_file_name_prefix}{grains}-{cell}_'
 
-        simulation_base_path = f'/nethome/o.okewale/examples/{dx_spacing}e-06_3.2e-05/sim_results_1'
+        simulation_base_path = f'/nethome/o.okewale/examples/{dx_spacing}e-06_3.2e-05_mod2/sim_results'
         filename = f'Polycrystal_{grains}_{cell}x{cell}x{cell}'
         input_file = f'{simulation_base_path}/{filename}/{stand_number}_stand/CA_files/5.0/.fractions.txt'
 
@@ -163,7 +155,7 @@ def plotRXTimeResults(simulations):
 
 
 def plotStressStrainResults(simulations):
-    fname_suffix = 'tensionX'
+    fname_suffix = 'tensionX2'
     markers = [".","o","*","v","p",">","d","+","x","s"]
     label_prefix = ""
     is_same_grains = False
@@ -180,7 +172,7 @@ def plotStressStrainResults(simulations):
         cell = simulation[1]
         dx_spacing = simulation[2]
 
-        simulation_base_path = f'/nethome/o.okewale/examples/{dx_spacing}e-06_3.2e-05/sim_results_1'
+        simulation_base_path = f'/nethome/o.okewale/examples/{dx_spacing}e-06_3.2e-05_mod2/sim_results'
         out_file_name_prefix = f'{out_file_name_prefix}{grains}-{cell}_'
         file_name = f'Polycrystal_{grains}_{cell}x{cell}x{cell}'
         
@@ -216,8 +208,12 @@ def plotStressStrainResults(simulations):
         for path in d.get_dataset_location('sigma_vM'):
             # plt_data['incs'].append(path.split('/')[0])
             plt_data['stress'].append(np.average(f[path])/1e6)
+        lastStrain = 0
         for path in d.get_dataset_location('epsilon_V^0.0(F)_vM'):
-            plt_data['strain'].append(np.average(f[path]))
+            plt_data['strain'].append(lastStrain + np.average(f[path]))
+            inc = path.split('/')[0]
+            if (inc == 'inc4000'):
+                lastStrain = np.average(f[path])
         
         # plt_data['stress'] = [np.average(s) for s in d.get('sigma_vM').values()]
         # plt_data['strain'] = [np.average(e) for e in d.get('epsilon_V^0.0(F)_vM').values()]
@@ -236,7 +232,7 @@ def plotStressStrainResults(simulations):
 
 
 # 1. Create the plot directory if it doesn't exist
-output_folder = 'plots/results'
+output_folder = 'mod2_plots'
 createDirectory(output_folder)
 
 # # 2. Run through the simulations

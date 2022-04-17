@@ -168,11 +168,16 @@ def plotStressStrainResults(simulation, start=1, end=5):
         input_file = f'{simulation_base_path}/{file_name}/simulation/{file_name}_{fname_suffix}.hdf5'
 
         d = damask.Result(input_file)
+        ds_sigma = d.get_dataset_location('sigma_vM')
+        ds_epsilon = d.get_dataset_location('epsilon_V^0.0(F)_vM')
 
-        d.add_stress_Cauchy()
-        d.add_strain()
-        d.add_equivalent_Mises('sigma')
-        d.add_equivalent_Mises('epsilon_V^0.0(F)')
+        if (len(ds_sigma) == 0):
+            d.add_stress_Cauchy()
+            d.add_equivalent_Mises('sigma')
+        
+        if (len(ds_epsilon) == 0):
+            d.add_strain()
+            d.add_equivalent_Mises('epsilon_V^0.0(F)')
                     
         f = h5py.File(d.fname)
                     
