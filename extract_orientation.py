@@ -4,12 +4,13 @@ def createDirectory(dir:str):
     if not os.path.exists(dir):
         os.makedirs(dir)
 
-def extract_ori(simulation, simulation_base_path):
+def extract_ori(simulation, sim_no=1, tension_file='tensionX'):
     grains = simulation[0]
     cell = simulation[1]
     stand = simulation[3]
+    simulation_base_path = f'/nethome/o.okewale/examples/{simulation[2]}e-06_3.2e-05/sim_results_{sim_no}'
     filename = f'Polycrystal_{grains}_{cell}x{cell}x{cell}'
-    input_file = f'{simulation_base_path}/{filename}/simulation/postProc/remesh_{filename}_tensionX_inc{stand}.txt'
+    input_file = f'{simulation_base_path}/{filename}/simulation/postProc/remesh_{filename}_{tension_file}_inc{stand}.txt'
     # /nethome/o.okewale/examples/sim_results/Polycrystal_10_14x14x14/2000_stand/CA_files
     output_base = f'{simulation_base_path}/{filename}/{stand}_stand/CA_files/0.0'
     createDirectory(output_base)
@@ -44,10 +45,10 @@ all_simulations_2 = [
     [310,44,4,6000]
 ]
 
-simulation_base_path = f'/nethome/o.okewale/examples/4e-06_3.2e-05/sim_results_1'
+tension_file = 'tensionX'
 # for simu in all_simulations_2:
 #     extract_ori(simu, simulation_base_path)
-extract_ori([512,52,4,6000], simulation_base_path)
+extract_ori([200,18,8,6000], tension_file=tension_file)
 # for i in range(1,4):
 #     simulation_base_path = f'/nethome/o.okewale/examples/4e-06_3.2e-05/sim_results_{i}'
-#     extract_ori([955,32,8,6000], simulation_base_path)
+#     extract_ori([955,32,8,6000], sim_no=i)

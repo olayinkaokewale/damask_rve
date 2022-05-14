@@ -33,15 +33,16 @@ def plotData(input_path, output_path, graph_title=""):
     plt.legend(['Texture index','Entropy'])
     plt.xlabel('Grain numbers')
     # plt.margins(0.1)
-    plt.title(graph_title)
+    # plt.title(graph_title)
     plt.savefig(output_path, bbox_inches='tight')
 
 output_folder = './plots/texture_index'
 createDirectory(output_folder)
 suffix = 'texture_index_entropy'
 # input_files = ['4micron_0.0','4micron_5.0','8micron_0.0','8micron_5.0']
-# input_files = ['8micron_2160_diff_0.0', '8micron_2160_diff_5.0']
-input_files = ['4micron-8micron_0.0', '4micron-8micron_5.0']
+input_files = ['8micron_2160_diff_0.0', '8micron_2160_diff_5.0']
+# input_files = ['4micron-8micron_0.0', '4micron-8micron_5.0']
+# input_files = ['310 grains 5.0 (3micron-others)', '310 grains']
 
 for x in input_files:
     plotData(f'data/{x}_{suffix}.data', f'{output_folder}/{x}_{suffix}_plot.png', f'{x} TI & Entropy plot')

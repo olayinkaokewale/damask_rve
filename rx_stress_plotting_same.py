@@ -78,6 +78,13 @@ all_simulations = [
     [512,26,8,6000],
     [98,15,8,6000],
     [10,7,8,6000]
+],
+[
+    [955,32,8,6000],
+    [512,26,8,6000],
+    [310,22,8,6000],
+    [98,15,8,6000],
+    [10,7,8,6000],
 ]
 ]
 
@@ -102,11 +109,11 @@ def plotRXTimeResults(simulation, start=1, end=5):
     plt_datas = []
     out_file_name_prefix = ''
     for index in range(start,end+1):
-        simulation_base_path = f'/nethome/o.okewale/examples/sim_results_{index}'
         grains = simulation[0]
         cell = simulation[1]
         dx_spacing = simulation[2]
         stand_number = 2000 if len(simulation) < 4 else simulation[3]
+        simulation_base_path = f'/nethome/o.okewale/examples/{dx_spacing}e-06_3.2e-05/sim_results_{index}'
 
         out_file_name_prefix = f'{out_file_name_prefix}{grains}-{cell}_'
 
@@ -135,7 +142,7 @@ def plotRXTimeResults(simulation, start=1, end=5):
     plt.xlabel('$t$ (s)')
     plt.ylabel('$X$')
     plt.legend(loc='lower right')
-    plt.title(f"{label_prefix}RX fraction - time plot")
+    # plt.title(f"{label_prefix}RX fraction - time plot")
     plt.savefig(f'{output_folder}/{out_file_name_prefix}rx_fractions_plot.png', bbox_inches='tight')
 
 
@@ -147,10 +154,10 @@ def plotStressStrainResults(simulation, start=1, end=5):
     plt_datas = []
     out_file_name_prefix = ''
     for index in range(start, end+1):
-        simulation_base_path = f'/nethome/o.okewale/examples/sim_results_{index}'
         grains = simulation[0]
         cell = simulation[1]
         dx_spacing = simulation[2]
+        simulation_base_path = f'/nethome/o.okewale/examples/{dx_spacing}e-06_3.2e-05/sim_results_{index}'
 
         out_file_name_prefix = f'{out_file_name_prefix}{grains}-{cell}_'
         file_name = f'Polycrystal_{grains}_{cell}x{cell}x{cell}'
@@ -199,21 +206,22 @@ def plotStressStrainResults(simulation, start=1, end=5):
     plt.ylabel('$\sigma$ (MPa)')
     plt.xlabel('$\epsilon$')
     plt.legend(loc='lower right')
-    plt.title(f"{label_prefix}stress-strain plot")
+    # plt.title(f"{label_prefix}stress-strain plot")
     plt.savefig(f'{output_folder}/{out_file_name_prefix}stress_strain_plot.png', bbox_inches='tight')
 
 
 # 1. Create the plot directory if it doesn't exist
-output_folder = 'plots/same'
+output_folder = 'plots/same_new'
 createDirectory(output_folder)
 
 # # 2. Run through the simulations
-# for simul in all_simulations:
-#     plotRXTimeResults(simul)
-#     plotStressStrainResults(simul)
+for simul in all_simulations[len(all_simulations)-1]:
+    plotRXTimeResults(simul,1,3)
+    plotStressStrainResults(simul,1,3)
 
 # # 2b. Run just one
-plotRXTimeResults([955,32,8,6000],1,3)
-plotStressStrainResults([955,32,8,6000],1,3)
+# plotRXTimeResults(all_simulations[len(all_simulations)-1],1,3)
+# plotStressStrainResults(all_simulations[len(all_simulations)-1],1,3)
+# plotStressStrainResults([955,32,8,6000],1,3)
 # plotRXTimeResults(all_simulations[3])
 # plotStressStrainResults(all_simulations[3])

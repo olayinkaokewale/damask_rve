@@ -84,7 +84,10 @@ all_simulations = [
     [310,22,8,6000],
 ],
 [
-    [10,7,8,6000]
+    [10,7,8,6000],
+],
+[
+    [98,60,2,6000]
 ]
 ]
 
@@ -121,7 +124,7 @@ def plotRXTimeResults(simulations):
 
         out_file_name_prefix = f'{out_file_name_prefix}{grains}-{cell}_'
 
-        simulation_base_path = f'/nethome/o.okewale/examples/{dx_spacing}e-06_3.2e-05_mod2/sim_results'
+        simulation_base_path = f'/nethome/o.okewale/examples/{dx_spacing}e-06_3.2e-05_mod/sim_results'
         filename = f'Polycrystal_{grains}_{cell}x{cell}x{cell}'
         input_file = f'{simulation_base_path}/{filename}/{stand_number}_stand/CA_files/5.0/.fractions.txt'
 
@@ -172,7 +175,7 @@ def plotStressStrainResults(simulations):
         cell = simulation[1]
         dx_spacing = simulation[2]
 
-        simulation_base_path = f'/nethome/o.okewale/examples/{dx_spacing}e-06_3.2e-05_mod2/sim_results'
+        simulation_base_path = f'/nethome/o.okewale/examples/{dx_spacing}e-06_3.2e-05_mod/sim_results'
         out_file_name_prefix = f'{out_file_name_prefix}{grains}-{cell}_'
         file_name = f'Polycrystal_{grains}_{cell}x{cell}x{cell}'
         
@@ -232,7 +235,7 @@ def plotStressStrainResults(simulations):
 
 
 # 1. Create the plot directory if it doesn't exist
-output_folder = 'mod2_plots'
+output_folder = 'mod_plots'
 createDirectory(output_folder)
 
 # # 2. Run through the simulations
