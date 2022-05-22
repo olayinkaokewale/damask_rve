@@ -59,41 +59,127 @@ def plotECDF(data):
         plt.savefig(f'{output_folder}/{sample_name}_ECDF_dislocation_density_plot.png', bbox_inches='tight')
 
 # ==
-def plotECDFByTime(simulations, time, output_folder, label_index=0, label_title="", label_suffix="", min_rho=0, xlim=None, pre_ecdf=False):
+def getDistinctLabels(all_data, _id=0):
+    distinct_data = []
+    for x in all_data:
+        if x[_id] not in distinct_data:
+            distinct_data.append(x[_id])
+    return distinct_data
+
+def plotECDFByTime(simulations, time, output_folder, label_index=0, label_title="", label_suffix="", min_rho=0, xlim=None, pre_ecdf=False, cmap='rainbow',cmap_adjust=0):
 
     plt.figure()
+    # distinct_data = getDistinctLabels(all_data=simulations, _id=label_index)
     for _id,data in enumerate(simulations):
-        # sample_name = f'Polycrystal_{data[0]}_{data[1]}x{data[1]}x{data[1]}'
-        # simulation_folder = f'/nethome/o.okewale/examples/{data[3]}e-06_3.2e-05/sim_results_1/{sample_name}/{data[2]}_stand/CA_files'
-        input_file = f'{getCASimulationFolder(data)}/{time}/._rho.txt'
-        
-        # sb.ecdfplot(x_values, log_scale=10)
-        # # plt.xscale('log')
-        # plt.margins(0.1)
-        # plt.savefig(f'{output_folder}/{time}s_{label_title}_ECDF_dislocation_density_plot.png', bbox_inches='tight')
-        if pre_ecdf:
-            x_values = getRho(input_file, min_value=min_rho)
-            x,y = ecdf(x_values)
+        # Set up lines and colors
+        line_width = 1 * (_id + 1)
+        gradient = np.linspace(0,1,len(simulations)+cmap_adjust)
+        colors = plt.cm.get_cmap(cmap)(gradient)
+
+        start = data[4] if len(data) > 4 else 1
+        end = data[5] if len(data) > 5 else 1
+        line = None
+        x_val = []
+        fill_x = []
+        fill_y = []
+        # fig,subplt = plt.subplots()
+        for _cid in range(start,end+1):
+            new_data = [data[0],data[1],data[2],data[3],_cid]
+            input_file = f'{getCASimulationFolder(new_data)}/{time}/._rho.txt'
+            if pre_ecdf:
+                x_values = getRho(input_file, min_value=min_rho)
+                x,y = ecdf(x_values)
+            else:
+                x_values = getRho(input_file)
+                x,y = ecdf(x_values,min_rho=min_rho)
+            fill_x.append(x)
+            fill_y.append(y)
+            x_val = x
+            #Plot the data
+            # line, = plt.plot(x, y, linestyle='--', linewidth=line_width, color=colors[_id]) # , marker='.', linestyle='none'
+        xmean = []
+        ymean = []
+        # ystd = []
+        if (len(fill_x) > 1 and len(fill_y) > 1):
+            for _ix,_ in enumerate(fill_y[0]):
+                x_m = np.mean([fill_x[_i][_ix] for _i in range(start-1,end)])
+                y_m = np.mean([fill_y[_i][_ix] for _i in range(start-1,end)])
+                # y_s = np.std([fill_y[_i][_ix] for _i in range(start-1,end)])
+                ymean.append(y_m)
+                xmean.append(x_m)
+                # ystd.append(y_s)
         else:
-            x_values = getRho(input_file)
-            x,y = ecdf(x_values,min_rho=min_rho)
-        # x_bar = [f,j for f,j in ecdf(x_values) if f > min_rho]
-        #Plot the data
+            ymean = fill_y[0]
+            xmean = fill_x[0]
+        # print(len(ymean), len(xmean))
+        # return
+        # if line:
+        xmean = np.array(xmean)
+        ymean = np.array(ymean)
+        # ystd = np.array(ystd)
+        line, = plt.plot(x_val, ymean, linestyle='--', linewidth=line_width, color=colors[_id]) # , marker='.', linestyle='none'
+        # yhigh = np.max(fill_y)
+        # print(len(fill_x), len(fill_y[0]), len(fill_y[1]))
+        # plt.fill_between(x=x_val, y1=ymean - ystd, y2=ymean + ystd, color=colors[_id], alpha=0.2)
+        line.set_label(f'{data[label_index]} {label_suffix}')
+
+    plt.legend(title=label_title)
+    plt.xlabel('Dislocation density, $\\rho$ (log-scale)')
+    if xlim and len(xlim) == 2:
+        plt.xlim(left=xlim[0],right=xlim[1])
+    plt.xscale('log', base=10)
+    plt.ylabel('ECDF')
+    plt.margins(0.1)
+    # plt.title(f"{sample_name} - ECDF dislocation density plot")
+    
+    min_rho_label = f'_{min_rho}' if min_rho > 0 else ""
+    plt.savefig(f'{output_folder}/{time}s_{label_title}{min_rho_label}_ECDF_dislocation_density_plot.png', bbox_inches='tight')
+
+
+def plotECDFByTime_v2(simulations, time, output_folder, label_index=0, label_title="", label_suffix="", min_rho=0, xlim=None, pre_ecdf=False):
+
+    plt.figure()
+    # distinct_data = getDistinctLabels(all_data=simulations, _id=label_index)
+    for _id,data in enumerate(simulations):
+        # Set up lines and colors
         line_width = 0.75 * (_id + 1)
         gradient = np.linspace(0,1,len(simulations))
         colors = plt.cm.rainbow(gradient)
-        plt.plot(x, y, linestyle='--', linewidth=line_width, color=colors[_id]) # , marker='.', linestyle='none'
-        # plt.xlabel('$log_{10}(\\rho)$')
-        plt.xlabel('Dislocation density, $\\rho$ (log-scale)')
-        if xlim and len(xlim) == 2:
-            plt.xlim(left=xlim[0],right=xlim[1])
-        plt.xscale('log', base=10)
-        plt.ylabel('ECDF')
-        plt.margins(0.1)
-        # plt.title(f"{sample_name} - ECDF dislocation density plot")
-        plt.legend([f'{s[label_index]} {label_suffix}' for s in simulations], title=label_title)
-        min_rho_label = f'_{min_rho}' if min_rho > 0 else ""
-        plt.savefig(f'{output_folder}/{time}s_{label_title}{min_rho_label}_ECDF_dislocation_density_plot.png', bbox_inches='tight')
+
+        start = data[4] if len(data) > 4 else 1
+        end = data[5] if len(data) > 5 else 1
+        line = None
+        fill_x = []
+        # fig,subplt = plt.subplots()
+        for _cid in range(start,end+1):
+            new_data = [data[0],data[1],data[2],data[3],_cid]
+            input_file = f'{getCASimulationFolder(new_data)}/{time}/._rho.txt'
+            x_values = getRho(input_file, min_value=min_rho) if pre_ecdf else getRho(input_file)
+            fill_x.append(x_values)
+            
+        xmean = []
+        for _ix,_ in enumerate(fill_x[0]):
+            x_m = np.mean([fill_x[_i][_ix] for _i in range(start-1,end)])
+            xmean.append(x_m)
+        
+        x,y = ecdf(xmean) if pre_ecdf else ecdf(xmean,min_rho=min_rho)
+        line, = plt.plot(x, y, linestyle='--', linewidth=line_width, color=colors[_id]) # , marker='.', linestyle='none'
+        # yhigh = np.max(fill_y)
+        # print(len(fill_x), len(fill_y[0]), len(fill_y[1]))
+        # plt.fill_between(x=fill_x, y1=ymean + ystd, y2=ymean - ystd, color=colors[_id], alpha=0.2)
+        line.set_label(f'{data[label_index]} {label_suffix}')
+
+    plt.legend(title=label_title)
+    plt.xlabel('Dislocation density, $\\rho$ (log-scale)')
+    if xlim and len(xlim) == 2:
+        plt.xlim(left=xlim[0],right=xlim[1])
+    plt.xscale('log', base=10)
+    plt.ylabel('ECDF')
+    plt.margins(0.1)
+    # plt.title(f"{sample_name} - ECDF dislocation density plot")
+    
+    min_rho_label = f'_{min_rho}' if min_rho > 0 else ""
+    plt.savefig(f'{output_folder}/{time}s_{label_title}{min_rho_label}_ECDF_dislocation_density_plot.png', bbox_inches='tight')
 
 
 def getCASimulationFolder(data):
@@ -136,14 +222,22 @@ def plotKSTest(allData, time_array):
         plt.savefig(f'{output_folder}/{time}s_KSTest_on_dislocation_density.png', bbox_inches='tight')
     
 
+size_simulations_minrho = [
+    [10,7,6000,8],
+    [98,15,6000,8],
+    [310,22,6000,8],
+    [512,26,6000,8],
+    [955,32,6000,8],
+    [2160,42,6000,8],
+]
 
 size_simulations = [
-    [10,7,6000,8,1],
-    [98,15,6000,8,1],
-    [310,22,6000,8,1],
-    [512,26,6000,8,1],
-    [955,32,6000,8,1],
-    [2160,42,6000,8,1],
+    [10,7,6000,8,1,5],
+    [98,15,6000,8,1,5],
+    [310,22,6000,8,1,5],
+    [512,26,6000,8,1,3],
+    [955,32,6000,8,1,3],
+    [2160,42,6000,8,1,1],
 ]
 res_simulations = [
     [310,22,6000,8],
@@ -158,7 +252,7 @@ res_simulations = [
 #     plotECDF(data)
 
 # Plot based on time
-output_folder = f'./plots/ECDF_4'
+output_folder = f'./plots/ECDF_8'
 createDirectory(output_folder)
 sel_seconds = ['5.0','2.5','0.0']
 # min_rho = 0
@@ -166,8 +260,10 @@ min_rho = 1.21e13
 # xlim = None
 xlim = [0.8e13,3e15]
 for sec in sel_seconds:
-    # plotECDFByTime(res_simulations, sec, output_folder, label_index=3, label_title="RVE grid spacing", label_suffix='$\\mu m$', min_rho=min_rho, xlim=xlim)
-    plotECDFByTime(size_simulations, sec, output_folder, label_index=0, label_title="RVE size", label_suffix='grains',  min_rho=min_rho, xlim=xlim, pre_ecdf=False)
+    # plotECDFByTime(res_simulations, sec, output_folder, label_index=3, label_title="RVE grid spacing", label_suffix='$\\mu m$', xlim=xlim, cmap='viridis',cmap_adjust=2)
+    # plotECDFByTime(res_simulations, sec, output_folder, label_index=3, label_title="RVE grid spacing", label_suffix='$\\mu m$', min_rho=min_rho, xlim=xlim, cmap='viridis',cmap_adjust=2)
+    plotECDFByTime(size_simulations, sec, output_folder, label_index=0, label_title="RVE size", label_suffix='grains', xlim=xlim, pre_ecdf=True, cmap='magma', cmap_adjust=4)
+    plotECDFByTime(size_simulations_minrho, sec, output_folder, label_index=0, label_title="RVE size", label_suffix='grains',  min_rho=min_rho, xlim=xlim, pre_ecdf=True, cmap='magma', cmap_adjust=4)
 
 # times=[round(g,1) for g in np.arange(0.0,5.1,1.0)]
 # plotKSTest(all_simulations,time_array=times)

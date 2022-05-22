@@ -1,4 +1,5 @@
 import sys
+from turtle import color
 sys.path.append('/nethome/storage/raid2/o.okewale/damask/python')
 import h5py
 import numpy as np
@@ -154,7 +155,7 @@ def checkSameResolution(simulations):
 
 # print(checkSameSimulations(all_simulations[6]))
 
-def plotRXTimeResults(simulations):
+def plotRXTimeResults(simulations, cmap='viridis', cmap_adjust=0):
     markers = [".","o","*","v","p",">","d","+","x","s"]
     label_prefix = ""
     is_same_grains = False
@@ -200,7 +201,8 @@ def plotRXTimeResults(simulations):
         plt_datas.append(plt_data)
         # print(plt_data)
         
-
+    gradient = np.linspace(0,1,len(plt_datas)+cmap_adjust)
+    colors = plt.cm.get_cmap(cmap)(gradient)
     plt.figure()
     for _id,data in enumerate(plt_datas):
         if is_same_grains and is_same_resolutions:
@@ -208,15 +210,15 @@ def plotRXTimeResults(simulations):
         else:
             line_width = 1 * _id+1
             line_styles = ['-','-', '-.', '-.', '--', '--']
-            plt.plot(data['time'], data['fraction'], linestyle=line_styles[-1], label=data['label'], linewidth=line_width)
-    plt.xlabel('$t$ (s)')
+            plt.plot(data['time'], data['fraction'], linestyle=line_styles[-1], color=colors[_id], label=data['label'], linewidth=line_width)
+    plt.xlabel('$t_a$ (s)')
     plt.ylabel('$X$')
     plt.legend(loc='lower right')
     # plt.title(f"{label_prefix}RX fraction - time plot")
     plt.savefig(f'{output_folder}/{out_file_name_prefix}rx_fractions_plot.png', bbox_inches='tight')
 
 
-def plotStressStrainResults(simulations):
+def plotStressStrainResults(simulations, cmap='viridis', cmap_adjust=0):
     markers = [".","o","*","v","p",">","d","+","x","s"]
     label_prefix = ""
     is_same_grains = False
@@ -287,13 +289,15 @@ def plotStressStrainResults(simulations):
         plt_datas.append(plt_data)
 
     plt.figure()
-    # plt.plot(strain_list, stress_list, linestyle="-.")
+    gradient = np.linspace(0,1,len(plt_datas)+cmap_adjust)
+    colors = plt.cm.get_cmap(cmap)(gradient)
     for _id,data in enumerate(plt_datas):
         if is_same_grains and is_same_resolutions:
             plt.plot(data['strain'], data['stress'], linestyle='-', label=data['label'], marker=data['markers'])
         else:
             line_width = 1 * _id+1
-            plt.plot(data['strain'], data['stress'], linestyle='--', label=data['label'], linewidth=line_width)
+            cl = colors[_id]
+            plt.plot(data['strain'], data['stress'], linestyle='--', color=cl, label=data['label'], linewidth=line_width)
     plt.ylabel('$\sigma$ (MPa)')
     plt.xlabel('$\epsilon$')
     plt.legend(loc='lower right')
@@ -302,7 +306,7 @@ def plotStressStrainResults(simulations):
 
 
 # 1. Create the plot directory if it doesn't exist
-output_folder = 'plots/results'
+output_folder = 'plots/results/cm'
 createDirectory(output_folder)
 
 # # 2. Run through the simulations
@@ -311,10 +315,12 @@ createDirectory(output_folder)
 #     plotStressStrainResults(simul)
 
 # # 2b. Run just one
-plotRXTimeResults(all_simulations[len(all_simulations)-1])
-plotStressStrainResults(all_simulations[len(all_simulations)-1])
-# plotRXTimeResults(all_simulations[3])
-# plotStressStrainResults(all_simulations[3])
+# # RVE resolution plot
+# plotRXTimeResults(all_simulations[-1],cmap_adjust=2)
+# plotStressStrainResults(all_simulations[-1],cmap_adjust=2)
+# RVE size plot
+plotRXTimeResults(all_simulations[-2],cmap='magma',cmap_adjust=4)
+plotStressStrainResults(all_simulations[-2],cmap='magma',cmap_adjust=4)
 
 
 # # Tests =======================================

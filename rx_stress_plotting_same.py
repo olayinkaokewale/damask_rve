@@ -80,11 +80,13 @@ all_simulations = [
     [10,7,8,6000]
 ],
 [
-    [955,32,8,6000],
-    [512,26,8,6000],
-    [310,22,8,6000],
-    [98,15,8,6000],
-    [10,7,8,6000],
+    [310,22,8,6000,3],
+    [98,15,8,6000,2],
+    [10,7,8,6000,1],
+],
+[
+    [955,32,8,6000,5],
+    [512,26,8,6000,4],
 ]
 ]
 
@@ -100,7 +102,7 @@ def checkSameSimulations(simulations):
 
 # print(checkSameSimulations(all_simulations[6]))
 
-def plotRXTimeResults(simulation, start=1, end=5):
+def plotRXTimeResults(simulation, start=1, end=5, cmap='rainbow', cmap_adjust=0):
     
     markers = [".","o","*","v","p",">","d","+","x","s"]
     label_prefix = ""
@@ -113,6 +115,7 @@ def plotRXTimeResults(simulation, start=1, end=5):
         cell = simulation[1]
         dx_spacing = simulation[2]
         stand_number = 2000 if len(simulation) < 4 else simulation[3]
+        linewidth = simulation[4] if len(simulation) == 5 else 1
         simulation_base_path = f'/nethome/o.okewale/examples/{dx_spacing}e-06_3.2e-05/sim_results_{index}'
 
         out_file_name_prefix = f'{out_file_name_prefix}{grains}-{cell}_'
@@ -136,17 +139,19 @@ def plotRXTimeResults(simulation, start=1, end=5):
         # print(plt_data)
         
 
+    gradient = np.linspace(0,1,len(plt_datas)+cmap_adjust)
+    colors = plt.cm.get_cmap(cmap)(gradient)
     plt.figure()
-    for data in plt_datas:
-        plt.plot(data['time'], data['fraction'], linestyle='-', label=data['label'], marker=data['markers'])
-    plt.xlabel('$t$ (s)')
+    for _id,data in enumerate(plt_datas):
+        plt.plot(data['time'], data['fraction'], linestyle='--', linewidth=linewidth, label=data['label'], color=colors[_id]) #,marker=data['markers'], color=colors[_id])
+    plt.xlabel('$t_a$ (s)')
     plt.ylabel('$X$')
     plt.legend(loc='lower right')
     # plt.title(f"{label_prefix}RX fraction - time plot")
     plt.savefig(f'{output_folder}/{out_file_name_prefix}rx_fractions_plot.png', bbox_inches='tight')
 
 
-def plotStressStrainResults(simulation, start=1, end=5):
+def plotStressStrainResults(simulation, start=1, end=5, cmap='rainbow', cmap_adjust=0):
     fname_suffix = 'tensionX'
     markers = [".","o","*","v","p",">","d","+","x","s"]
     label_prefix = f'{simulation[0]} grains: '
@@ -157,6 +162,7 @@ def plotStressStrainResults(simulation, start=1, end=5):
         grains = simulation[0]
         cell = simulation[1]
         dx_spacing = simulation[2]
+        linewidth = simulation[4] if len(simulation) == 5 else 1
         simulation_base_path = f'/nethome/o.okewale/examples/{dx_spacing}e-06_3.2e-05/sim_results_{index}'
 
         out_file_name_prefix = f'{out_file_name_prefix}{grains}-{cell}_'
@@ -199,10 +205,12 @@ def plotStressStrainResults(simulation, start=1, end=5):
         
         plt_datas.append(plt_data)
 
+    gradient = np.linspace(0,1,len(plt_datas)+cmap_adjust)
+    colors = plt.cm.get_cmap(cmap)(gradient)
     plt.figure()
     # plt.plot(strain_list, stress_list, linestyle="-.")
-    for data in plt_datas:
-        plt.plot(data['strain'], data['stress'], linestyle='-', label=data['label'], marker=data['markers'])
+    for _id,data in enumerate(plt_datas):
+        plt.plot(data['strain'], data['stress'], linestyle='--', linewidth=linewidth, label=data['label'], color=colors[_id]) #, marker=data['markers']
     plt.ylabel('$\sigma$ (MPa)')
     plt.xlabel('$\epsilon$')
     plt.legend(loc='lower right')
@@ -211,13 +219,17 @@ def plotStressStrainResults(simulation, start=1, end=5):
 
 
 # 1. Create the plot directory if it doesn't exist
-output_folder = 'plots/same_new'
+output_folder = 'plots/same_new_cm'
 createDirectory(output_folder)
 
 # # 2. Run through the simulations
-for simul in all_simulations[len(all_simulations)-1]:
-    plotRXTimeResults(simul,1,3)
-    plotStressStrainResults(simul,1,3)
+for simul in all_simulations[-2]:
+    plotRXTimeResults(simul,1,5, cmap='rainbow', cmap_adjust=0)
+    plotStressStrainResults(simul,1,5, cmap='rainbow', cmap_adjust=0)
+
+for simul in all_simulations[-1]:
+    plotRXTimeResults(simul,1,3, cmap='rainbow', cmap_adjust=0)
+    plotStressStrainResults(simul,1,3, cmap='rainbow', cmap_adjust=0)
 
 # # 2b. Run just one
 # plotRXTimeResults(all_simulations[len(all_simulations)-1],1,3)

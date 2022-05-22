@@ -9,8 +9,10 @@ def createDirectory(dir:str):
     if not os.path.exists(dir):
         os.makedirs(dir)
 
-def plotData(data, output_path):
+def plotData(data, output_path, cmap='viridis', cmap_adjust=2):
     legends = [f'{x} $\\mu m$' for x in data.keys()]
+    gradient = np.linspace(0,1,len(data)+cmap_adjust)
+    colors = plt.cm.get_cmap(cmap)(gradient)
     plt.figure()
     for _id,key in enumerate(data.keys()):
         line_width = 1 * _id+1
@@ -18,14 +20,14 @@ def plotData(data, output_path):
         x_values = [x[0] for x in data.get(key)]
         # y_values = [(y[1]**3)/1e5 for y in data.get(key)]
         y_values = [(y[1]**3) for y in data.get(key)]
-        plt.plot(x_values, y_values, linestyle='--', linewidth=line_width) # , marker='.', linestyle='none'
+        plt.plot(x_values, y_values, linestyle='--', color=colors[_id], linewidth=line_width) # , marker='.', linestyle='none'
 
     # plt.ylabel('Grid points ($\\times 10^{5}$)')
     plt.ylabel('Grid points')
     plt.legend(legends, title="Grid spacing")
     plt.xlabel('Grain numbers')
-    plt.xscale('log')
-    plt.yscale('log')
+    # plt.xscale('log')
+    # plt.yscale('log')
     plt.margins(0.1)
     plt.savefig(output_path, bbox_inches='tight')
 
@@ -66,4 +68,5 @@ data = {
 
 output_base = 'plots/rve_point_plots'
 createDirectory(output_base)
-plotData(data, f'{output_base}/plot2_xylog.png')
+# plotData(data, f'{output_base}/plot2_xlog.png')
+plotData(data, f'{output_base}/plot2.png')
